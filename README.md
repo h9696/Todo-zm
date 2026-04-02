@@ -40,8 +40,6 @@ Todo/
 ├─ main.js             # 主进程：窗口创建、IPC、菜单命令
 ├─ preload.js          # 预加载脚本：安全桥接 API
 ├─ package.json        # 项目依赖与脚本
-├─ storage/
-│  └─ tasks.json       # 本地数据文件（任务/分类）
 └─ dist/               # 打包输出目录
 ```
 ## 技术栈
@@ -51,12 +49,18 @@ Todo/
 - SortableJS（拖拽排序）
 - electron-builder（打包构建）
 ## 数据存储
-应用使用本地 JSON 文件持久化数据：
-- 默认路径：`storage/tasks.json`
-- 数据结构：
-  - `tasks`：任务数组
-  - `categories`：分类数组
+
+应用使用本地 JSON 文件持久化数据，默认写入当前系统用户目录下：
+
+- Windows：`%APPDATA%/todo-app/tasks.json`（实际为 Electron `app.getPath('userData')/tasks.json`）
+
+数据结构：
+
+- `tasks`：任务数组
+- `categories`：分类数组
+
 说明：
+
 - 初次运行会自动创建数据文件
+- 若检测到旧版项目目录内 `storage/tasks.json`，会自动迁移到新路径
 - 数据写入为本地离线存储，不依赖网络服务
-- 如果你是团队协作，建议每位使用者使用自己的本地数据文件，不要共享同一份 `tasks.json`

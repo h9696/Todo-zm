@@ -3,23 +3,33 @@ const path = require('path');
 const fs = require('fs');
 
 let mainWindow;
-const DATA_PATH = path.join(__dirname, 'storage', 'tasks.json');
+
+function getDataPath() {
+    return path.join(app.getPath('userData'), 'tasks.json');
+}
 
 function ensureDataFile() {
-    const dir = path.dirname(DATA_PATH);
+    const currentDataPath = getDataPath();
+    const dir = path.dirname(currentDataPath);
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
     }
 
-    if (!fs.existsSync(DATA_PATH)) {
-        fs.writeFileSync(DATA_PATH, JSON.stringify({ tasks: [], categories: [] }, null, 2), 'utf8');
+    const legacyPath = path.join(__dirname, 'storage', 'tasks.json');
+    if (!fs.existsSync(currentDataPath) && fs.existsSync(legacyPath)) {
+        fs.copyFileSync(legacyPath, currentDataPath);
+        return;
+    }
+
+    if (!fs.existsSync(currentDataPath)) {
+        fs.writeFileSync(currentDataPath, JSON.stringify({ tasks: [], categories: [] }, null, 2), 'utf8');
     }
 }
 
 function loadData() {
     try {
         ensureDataFile();
-        const raw = fs.readFileSync(DATA_PATH, 'utf8');
+        const raw = fs.readFileSync(getDataPath(), 'utf8');
         const parsed = JSON.parse(raw || '{}');
 
         if (Array.isArray(parsed)) {
@@ -43,7 +53,7 @@ function saveData(payload) {
             tasks: Array.isArray(payload?.tasks) ? payload.tasks : [],
             categories: Array.isArray(payload?.categories) ? payload.categories : []
         };
-        fs.writeFileSync(DATA_PATH, JSON.stringify(normalized, null, 2), 'utf8');
+        fs.writeFileSync(getDataPath(), JSON.stringify(normalized, null, 2), 'utf8');
         return true;
     } catch (error) {
         console.error('保存任务失败:', error);
@@ -72,7 +82,7 @@ function createWindow() {
 
 ipcMain.handle('load-data', () => loadData());
 ipcMain.handle('save-data', (_, payload) => saveData(payload));
-ipcMain.handle('get-data-path', () => DATA_PATH);
+ipcMain.handle('get-data-path', () => getDataPath());
 
 ipcMain.handle('menu-command', (_, command) => {
     if (!mainWindow) return;
