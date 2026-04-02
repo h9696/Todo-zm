@@ -17,8 +17,24 @@
 - npm 9+
 - Windows 10/11
 ### 2) 安装依赖
+
+本项目关键依赖如下：
+
+- `electron`（开发依赖，用于桌面应用运行）
+- `sortablejs`（运行依赖，用于任务拖拽排序）
+- `electron-builder`（开发依赖，用于打包构建）
+
+安装命令：
+
 ```bash
 npm install
+```
+
+如需手动单独安装（可选）：
+
+```bash
+npm install sortablejs
+npm install -D electron electron-builder
 ```
 ### 3) 开发运行
 ```bash
