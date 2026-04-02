@@ -3,7 +3,7 @@
 
 ## 首页
 
-<img src="D:\awork\Todo\img\1.png" alt="1" style="zoom: 56%;" />
+<img src="./img/1.png" alt="1" style="zoom:56%;" />
 
 
 
