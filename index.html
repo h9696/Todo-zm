@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>待办清单</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="custom-menubar" id="customMenuBar">
+    <button class="menu-root" data-menu="file">文件</button>
+    <button class="menu-root" data-menu="edit">编辑</button>
+    <button class="menu-root" data-menu="view">查看</button>
+    <button class="menu-root" data-menu="window">窗口</button>
+    <button class="menu-root" data-menu="help">帮助</button>
+
+    <div class="menu-panel" data-panel="file">
+        <button class="menu-item" data-command="new-task">新建任务</button>
+        <button class="menu-item" data-command="focus-input">定位输入框</button>
+        <hr>
+        <button class="menu-item" data-command="quit-app">退出应用</button>
+    </div>
+
+    <div class="menu-panel" data-panel="edit">
+        <button class="menu-item" data-command="undo">撤销</button>
+        <button class="menu-item" data-command="redo">重做</button>
+        <hr>
+        <button class="menu-item" data-command="cut">剪切</button>
+        <button class="menu-item" data-command="copy">复制</button>
+        <button class="menu-item" data-command="paste">粘贴</button>
+        <button class="menu-item" data-command="select-all">全选</button>
+    </div>
+
+    <div class="menu-panel" data-panel="view">
+        <button class="menu-item" data-command="reload">重新加载</button>
+        <button class="menu-item" data-command="toggle-devtools">切换开发者工具</button>
+    </div>
+
+    <div class="menu-panel" data-panel="window">
+        <button class="menu-item" data-command="minimize">最小化</button>
+        <button class="menu-item" data-command="close-window">关闭窗口</button>
+    </div>
+
+    <div class="menu-panel" data-panel="help">
+        <button class="menu-item" data-command="about">关于待办清单</button>
+    </div>
+</div>
+
+<div class="app-shell">
+    <aside class="sidebar">
+        <div class="brand-block">
+            <h1 class="brand-title">待办清单</h1>
+            <p class="brand-subtitle">简约 · 专注 · 高效</p>
+            <div class="task-count-card">任务总数 <span id="totalCount">0</span></div>
+            <div id="todayCn" class="today-chip"></div>
+        </div>
+
+        <section class="filter-panel">
+            <h2>筛选</h2>
+            <label class="toggle-row" for="filterAll">
+                <input type="radio" name="statusFilter" id="filterAll" checked>
+                <span>所有任务</span>
+            </label>
+            <label class="toggle-row" for="filterIncomplete">
+                <input type="radio" name="statusFilter" id="filterIncomplete">
+                <span>未完成</span>
+            </label>
+            <label class="toggle-row" for="filterCompleted">
+                <input type="radio" name="statusFilter" id="filterCompleted">
+                <span>已完成</span>
+            </label>
+        </section>
+
+        <section class="category-panel">
+            <div class="category-header">
+                <h2>分类管理</h2>
+                <button id="addCategoryBtn" class="ghost-btn" type="button">添加分类</button>
+            </div>
+            <div id="categoriesList" class="categories-list"></div>
+        </section>
+    </aside>
+
+    <main class="main-pane">
+        <header class="composer">
+            <input id="taskInput" type="text" maxlength="200" placeholder="输入任务内容，或点击“添加任务”弹窗填写...">
+            <button id="addTaskBtn" class="primary-btn" type="button">添加任务</button>
+        </header>
+
+        <section id="taskList" class="task-list"></section>
+    </main>
+</div>
+
+<div id="taskModal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+        <h3 id="taskModalTitle">编辑任务</h3>
+        <input id="taskModalInput" type="text" maxlength="200" placeholder="任务内容">
+        <div class="modal-section">
+            <p>截止日期</p>
+            <div class="date-row">
+                <input id="taskModalDate" type="date">
+                <button id="clearDateBtn" class="ghost-btn" type="button">清空日期</button>
+                <span id="taskModalDateCn" class="date-cn"></span>
+            </div>
+        </div>
+        <div class="modal-section">
+            <p>分类（可多选）</p>
+            <div id="taskModalCategories" class="modal-categories"></div>
+        </div>
+        <div class="modal-actions">
+            <button id="taskModalCancel" class="ghost-btn" type="button">取消</button>
+            <button id="taskModalSave" class="primary-btn" type="button">保存</button>
+        </div>
+    </div>
+</div>
+
+<div id="categoryModal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-card small">
+        <h3>添加分类</h3>
+        <input id="categoryNameInput" type="text" maxlength="20" placeholder="输入分类名称">
+        <div class="modal-actions">
+            <button id="categoryModalCancel" class="ghost-btn" type="button">取消</button>
+            <button id="categoryModalSave" class="primary-btn" type="button">创建</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+<script src="renderer.js"></script>
+</body>
+</html>
